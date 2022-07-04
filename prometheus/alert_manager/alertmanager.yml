@@ -9,15 +9,24 @@ route:
   group_wait: 0s
   group_interval: 5m
   repeat_interval: 1h
-  
-  routes:
-    - receiver: 'node-monitoring'
-      group_by: ['...']
+ 
 
-  receiver: node-monitoring
+  routes:
+    - matchers:
+      - severity="major"
+      receiver: seinetwork-warning
+
+    - matchers:
+      - severity="critical"
+      receiver: seinetwork-rules
+    
+  receiver: seinetwork-rules
 
 receivers:
-- name: 'node-monitoring'
-  webhook_configs:
-  - send_resolved: true
-    url: 'http://alertmanager-bot:8080'
+- name: 'seinetwork-rules'
+  pagerduty_configs:
+    - service_key: 'REPLACE-ME'
+
+- name: 'seinetwork-warning'
+  pagerduty_configs:
+    - service_key: 'REPLACE-ME'

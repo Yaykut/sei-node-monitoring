@@ -2,7 +2,6 @@ global:
   scrape_interval: 15s
   scrape_timeout: 10s
   evaluation_interval: 15s
-
 alerting:
   alertmanagers:
     - follow_redirects: true
@@ -10,34 +9,72 @@ alerting:
       timeout: 10s
       api_version: v2
       static_configs:
-        - targets: [alertmanager:9093]
-
+        - targets:
+            - alertmanager:9093
 rule_files:
   - /etc/prometheus/alerts/alert.rules
-
 scrape_configs:
   - job_name: prometheus
     metrics_path: /metrics
     static_configs:
-      - targets: [localhost:9090]
+      - targets:
+          - localhost:9090
   - job_name: cosmos
     metrics_path: /metrics
-    static_configs: []
+    static_configs:
+      - targets:
+          - 18.118.159.154:26660
+        labels: {}
+      - targets:
+          - 3.15.197.187:26660
+        labels: {}
   - job_name: node
     metrics_path: /metrics
-    static_configs: []
+    static_configs:
+      - targets:
+          - 18.118.159.154:9100
+        labels:
+          instance: sei-testnet-2
+      - targets:
+          - 3.15.197.187:9100
+        labels:
+          instance: sei-testnet-2
   - job_name: validators
     metrics_path: /metrics/validators
-    static_configs: []
+    static_configs:
+      - targets:
+          - 18.118.159.154:9300
+        labels: {}
+      - targets:
+          - 3.15.197.187:9300
+        labels: {}
   - job_name: validator
     metrics_path: /metrics/validator
     relabel_configs:
-      - source_labels: [address]
+      - source_labels:
+          - address
         target_label: __param_address
-    static_configs: []
+    static_configs:
+      - targets:
+          - 18.118.159.154:9300
+        labels:
+          address: seivaloper12m7cke9fng2kl7xh734gc52f7yd2xqgp3q8umz
+      - targets:
+          - 3.15.197.187:9300
+        labels:
+          address: seivaloper1q0mtmvac7s6e86nxe0c36wtjkfwuyr25p4l7fn
   - job_name: wallet
     metrics_path: /metrics/wallet
     relabel_configs:
-    - source_labels: [address]
-      target_label: __param_address
-    static_configs: []
+      - source_labels:
+          - address
+        target_label: __param_address
+    static_configs:
+      - targets:
+          - 18.118.159.154:9300
+        labels:
+          address: sei12m7cke9fng2kl7xh734gc52f7yd2xqgp00kj6j
+      - targets:
+          - 3.15.197.187:9300
+        labels:
+          address: sei1q0mtmvac7s6e86nxe0c36wtjkfwuyr25l6wsgr
